@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .result.failing {
+            color: red;
+        }
+        .result.passing {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CGPA Calculator</h1>
+        <div id="input-fields">
+            <div class="input-group">
+                <label for="grade1">Grade (e.g., 4.0, 3.5):</label>
+                <input type="number" id="grade1" placeholder="Enter grade">
+            </div>
+            <div class="input-group">
+                <label for="credits1">Credit Hours:</label>
+                <input type="number" id="credits1" placeholder="Enter credit hours">
+            </div>
+        </div>
+        <button onclick="addRow()">Add More Courses</button><br><br>
+        <button onclick="calculateCGPA()">Calculate CGPA</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        let counter = 1;
+
+        function addRow() {
+            counter++;
+            const inputFields = document.getElementById('input-fields');
+
+            const gradeGroup = document.createElement('div');
+            gradeGroup.className = 'input-group';
+            gradeGroup.innerHTML = `
+                <label for="grade${counter}">Grade (e.g., 4.0, 3.5):</label>
+                <input type="number" id="grade${counter}" placeholder="Enter grade">
+            `;
+
+            const creditGroup = document.createElement('div');
+            creditGroup.className = 'input-group';
+            creditGroup.innerHTML = `
+                <label for="credits${counter}">Credit Hours:</label>
+                <input type="number" id="credits${counter}" placeholder="Enter credit hours">
+            `;
+
+            inputFields.appendChild(gradeGroup);
+            inputFields.appendChild(creditGroup);
+        }
+
+        function calculateCGPA() {
+            let totalGradePoints = 0;
+            let totalCreditHours = 0;
+
+            for (let i = 1; i <= counter; i++) {
+                const grade = parseFloat(document.getElementById(`grade${i}`).value);
+                const credits = parseFloat(document.getElementById(`credits${i}`).value);
+
+                if (!isNaN(grade) && !isNaN(credits)) {
+                    totalGradePoints += grade * credits;
+                    totalCreditHours += credits;
+                }
+            }
+
+            const cgpa = totalCreditHours > 0 ? (totalGradePoints / totalCreditHours).toFixed(2) : 0;
+            const resultElement = document.getElementById('result');
+
+            if (cgpa < 2.0) {
+                resultElement.className = 'result failing';
+                resultElement.innerText = `Your CGPA is: ${cgpa} (Failing)`;
+            } else {
+                resultElement.className = 'result passing';
+                resultElement.innerText = `Your CGPA is: ${cgpa} (Passing)`;
+            }
+        }
+    </script>
+</body>
+</html>
